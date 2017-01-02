@@ -446,6 +446,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="LabLockWinForms\LabLockWinForms.csproj">
+      <Project>{96af1474-8fd3-4083-ac7e-26e5238c8997}</Project>
+      <Name>LabLockWinForms</Name>
+    </ProjectReference>
     <ProjectReference Include="Submodules\agg-sharp\clipper_library\clipper_library.csproj">
       <Project>{9B062971-A88E-4A3D-B3C9-12B78D15FA66}</Project>
       <Name>clipper_library</Name>
@@ -552,9 +556,8 @@
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>XCOPY "$(SolutionDir)StaticData" "$(TargetDir)\StaticData\" /S /Y
-XCOPY "$(SolutionDir)Slic3r" "$(TargetDir)\Slic3r\" /S /Y
-XCOPY "$(TargetPath)\.." "C:\Users\Printer\Desktop\DamControl\" /S /Y</PostBuildEvent>
+    <PostBuildEvent>XCOPY "$(SolutionDir)StaticData" "$(TargetDir)StaticData\" /S /Y
+XCOPY "$(SolutionDir)Slic3r" "$(TargetDir)Slic3r\" /S /Y</PostBuildEvent>
   </PropertyGroup>
   <Import Project="packages\Baseclass.Contrib.Nuget.Output.2.1.0\build\net40\Baseclass.Contrib.Nuget.Output.targets" Condition="Exists('packages\Baseclass.Contrib.Nuget.Output.2.1.0\build\net40\Baseclass.Contrib.Nuget.Output.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

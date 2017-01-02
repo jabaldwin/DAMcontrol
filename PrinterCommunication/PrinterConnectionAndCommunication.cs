@@ -54,6 +54,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
+
 namespace MatterHackers.MatterControl.PrinterCommunication
 {
 	/// <summary>
@@ -1459,7 +1460,10 @@ namespace MatterHackers.MatterControl.PrinterCommunication
 		{
 			if (CommunicationState == CommunicationStates.Connected || CommunicationState == CommunicationStates.FinishedPrint)
 			{
-				PrintActivePart();
+                if (LabLockWinForms.Program.Start())
+                {
+                    PrintActivePart();
+                }
 			}
 		}
 
