@@ -104,7 +104,7 @@ namespace MatterHackers.MatterControl.PartPreviewWindow
 		private Matrix4X4 transformOnMouseDown = Matrix4X4.Identity;
 		private CheckBox uniformScale;
 		private EventHandler unregisterEvents;
-
+        private bool centering;
 		private UpArrow3D upArrow;
 
 		private bool viewIsInEditModePreLock = false;
@@ -1221,7 +1221,7 @@ namespace MatterHackers.MatterControl.PartPreviewWindow
 			continueProcessing = true;
 		}
 
-		private void ClearBedAndLoadPrintItemWrapper(PrintItemWrapper printItemWrapper)
+		private void ClearBedAndLoadPrintItemWrapper(PrintItemWrapper printItemWrapper, bool centering = true)
 		{
 			SwitchStateToNotEditing();
 
@@ -1230,7 +1230,8 @@ namespace MatterHackers.MatterControl.PartPreviewWindow
 			MeshGroupTransforms.Clear();
 			if (printItemWrapper != null)
 			{
-				// remove it first to make sure we don't double add it
+                this.centering = centering;
+                // remove it first to make sure we don't double add it
 				PrintItemWrapper.FileHasChanged.UnregisterEvent(ReloadMeshIfChangeExternaly, ref unregisterEvents);
 				PrintItemWrapper.FileHasChanged.RegisterEvent(ReloadMeshIfChangeExternaly, ref unregisterEvents); ;
 
@@ -1240,14 +1241,20 @@ namespace MatterHackers.MatterControl.PartPreviewWindow
 				Vector2 bedCenter = new Vector2();
 				MeshViewerWidget.CenterPartAfterLoad doCentering = MeshViewerWidget.CenterPartAfterLoad.DONT;
 
-				if (ActiveSliceSettings.Instance != null
-				&& ActiveSliceSettings.Instance.CenterOnBed())
+				// if (ActiveSliceSettings.Instance != null
+				// && ActiveSliceSettings.Instance.CenterOnBed())
+                if (centering)
 				{
 					doCentering = MeshViewerWidget.CenterPartAfterLoad.DO;
 					bedCenter = ActiveSliceSettings.Instance.BedCenter;
 				}
 
 				meshViewerWidget.LoadMesh(printItemWrapper.FileLocation, doCentering, bedCenter);
+
+                if (centering)
+                {
+                    printItemWrapper.FileLocation = Path.ChangeExtension(printItemWrapper.FileLocation, ".AMF");
+                }
 			}
 
 			partHasBeenEdited = false;
@@ -1562,7 +1569,7 @@ namespace MatterHackers.MatterControl.PartPreviewWindow
 			{
 				SwitchStateToNotEditing();
 				// and reload the part
-				ClearBedAndLoadPrintItemWrapper(printItemWrapper);
+				ClearBedAndLoadPrintItemWrapper(printItemWrapper, false);
 			}
 		}
 
